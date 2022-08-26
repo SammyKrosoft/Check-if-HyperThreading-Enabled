@@ -1,16 +1,24 @@
-# Script taken from :
+# Script closely based on :
 # http://jeffwouters.nl/index.php/2016/10/powershell-is-hyperthreading-enabled/
-# Putting it here for quick retrieve (and in case the page disappears :) )
+# Adding multiple computers and Foreach loop, as well as progress bar
+# Adding example to add computer names from file, and from GEt-ExchangeServer (if so, need to run from Exchange Management Shell)
 
 # Define variables
 $ComputerNames = "E2016-01", "E2016-02"
+# To query from computers list in file:
+#           $ComputerNames = Get-Content C:\scripts\ComputerNames.txt
+# To query from Exchange computers !need to run the script from an Exchange Management Console! :
+#          $ComputerNames = $(Get-ExchangeServer | Foreach {$_.Name})
+
 $LogicalCPU = 0
 $PhysicalCPU = 0
 $Core = 0
 
+$Counter = 0
 $Collection = @()
 Foreach ($ComputerName in $ComputerNames){
-
+    $Counter++
+    Write-Progress -Activity "Querying computers with WMI" -Status "Querying $ComputerName" -Id 1 -PercentComplete $($Counter/($ComputerNames.Count)*100)
     $LogicalCPU = 0
     $PhysicalCPU = 0
     $Core = 0
@@ -34,4 +42,4 @@ Foreach ($ComputerName in $ComputerNames){
     $Collection += New-Object -TypeName PSObject -Property $Hash
 }
 
-$Collection | ft
+$Collection | ft ComputerName, LogicalCPU, PysicalCPU, HyperThreading, CoreNr
