@@ -10,10 +10,6 @@ $ComputerNames = "E2016-01", "E2016-02"
 # To query from Exchange computers !need to run the script from an Exchange Management Console! :
 #          $ComputerNames = $(Get-ExchangeServer | Foreach {$_.Name})
 
-$LogicalCPU = 0
-$PhysicalCPU = 0
-$Core = 0
-
 $Counter = 0
 $Collection = @()
 Foreach ($ComputerName in $ComputerNames){
